@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, Wrench } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
+import { processLogoRemoveBg } from "@/utils/removeLogoBg";
 
 const NewNavigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [processedLogo, setProcessedLogo] = useState<string>(logo);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +15,13 @@ const NewNavigation = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Process logo to remove background
+    processLogoRemoveBg(logo)
+      .then(url => setProcessedLogo(url))
+      .catch(err => console.error('Failed to process logo:', err));
   }, []);
 
   const navLinks = [
@@ -46,9 +55,9 @@ const NewNavigation = () => {
             {/* Logo - Much Bigger */}
             <div className="flex items-center space-x-3 animate-fade-in">
               <img 
-                src={logo} 
+                src={processedLogo} 
                 alt="Somnath Auto Service Station" 
-                className="h-20 w-auto drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer" 
+                className="h-24 w-auto drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer" 
                 onClick={() => scrollToSection("#home")}
               />
             </div>
@@ -95,7 +104,7 @@ const NewNavigation = () => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-background/98 backdrop-blur-2xl lg:hidden animate-fade-in">
           <div className="flex flex-col items-center justify-center h-full space-y-8 p-8">
-            <img src={logo} alt="Logo" className="h-24 w-auto mb-8" />
+            <img src={processedLogo} alt="Logo" className="h-28 w-auto mb-8" />
             {navLinks.map((link, index) => (
               <button
                 key={link.name}

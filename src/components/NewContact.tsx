@@ -169,7 +169,7 @@ const NewContact = () => {
             <Card className="h-full overflow-hidden border-4 border-border/50 shadow-2xl">
               <CardContent className="p-0 h-full min-h-[700px]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14822.5!2d70.3036!3d21.3488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be2c7f5e8c8c87%3A0x1e3e8c8e7f5e8c87!2sMendarda%2C%20Gujarat%20362260!5e0!3m2!1sen!2sin!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3715.1656978425447!2d70.30104107527965!3d21.348776580370846!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be2c8d4b5e8b5e7%3A0x8e8e8e8e8e8e8e8e!2sSomnath%20Auto%20Service%20Station!5e0!3m2!1sen!2sin!4v1709876543210!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
