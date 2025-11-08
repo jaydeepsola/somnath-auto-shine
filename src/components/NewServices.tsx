@@ -119,7 +119,7 @@ const NewServices = () => {
             <span className="text-secondary font-bold text-lg tracking-widest uppercase">Our Expertise</span>
           </div>
           <h2 className="text-5xl md:text-7xl font-black mb-6">
-            Premium <span className="text-secondary">Services</span>
+            Premium-amarinfotech <span className="text-secondary">Services</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Comprehensive automotive care solutions delivered by skilled professionals with state-of-the-art equipment
