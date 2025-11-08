@@ -3,12 +3,12 @@ import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
 import { processLogoRemoveBg } from "@/utils/removeLogoBg";
-
+ 
 const NewNavigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [processedLogo, setProcessedLogo] = useState<string>(logo);
-
+ 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -16,14 +16,41 @@ const NewNavigation = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+ 
+  // useEffect(() => {
+  //   // Process logo to remove background
+  //   processLogoRemoveBg(logo)
+  //     .then(url => setProcessedLogo(url))
+  //     .catch(err => console.error('Failed to process logo:', err));
+  // }, []);
+ 
+  // useEffect(() => {
+  //   processLogoRemoveBg(logo)
+  //     .then(url => {
+  //       if (url) setProcessedLogo(url);
+  //       else setProcessedLogo(logo);
+  //     })
+  //     .catch(() => setProcessedLogo(logo));
+  // }, []);
+ 
   useEffect(() => {
-    // Process logo to remove background
-    processLogoRemoveBg(logo)
-      .then(url => setProcessedLogo(url))
-      .catch(err => console.error('Failed to process logo:', err));
+    const isMobile = window.innerWidth < 768;
+ 
+    if (isMobile) {
+      // Mobile में original logo ही use करो
+      setProcessedLogo(logo);
+    } else {
+      // Desktop में background removal process चलाओ
+      processLogoRemoveBg(logo)
+        .then(url => {
+          if (url) setProcessedLogo(url);
+          else setProcessedLogo(logo);
+        })
+        .catch(() => setProcessedLogo(logo));
+    }
   }, []);
-
+ 
+ 
   const navLinks = [
     { name: "Home", href: "#home" },
     { name: "Services", href: "#services" },
@@ -32,7 +59,7 @@ const NewNavigation = () => {
     { name: "Reviews", href: "#reviews" },
     { name: "Contact", href: "#contact" },
   ];
-
+ 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -40,28 +67,44 @@ const NewNavigation = () => {
       setIsMobileMenuOpen(false);
     }
   };
-
+ 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-white shadow-2xl border-b border-border/50"
-            : "bg-white"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+          ? "bg-white shadow-2xl border-b border-border/50"
+          : "bg-white"
+          }`}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-24">
             {/* Logo - Much Bigger */}
             <div className="flex items-center space-x-3 animate-fade-in">
-              <img 
-                src={processedLogo} 
-                alt="Somnath Auto Service Station" 
-                className="h-24 w-auto drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer" 
+              {/* <img
+                src={processedLogo}
+                alt="Somnath Auto Service Station"
+                className="h-24 w-auto drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer"
                 onClick={() => scrollToSection("#home")}
+              /> */}
+              {/* {processedLogo ? (
+                <img
+                  src={processedLogo}
+                  alt="Somnath Auto Service Station"
+                  className="h-24 w-auto drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer"
+                  onClick={() => scrollToSection("#home")}
+                />
+              ) : (
+                <div className="h-24 w-24 bg-gray-200 animate-pulse rounded-full" />
+              )} */}
+              <img
+                src={processedLogo}
+                alt="Somnath Auto Service Station"
+                className="max-h-20 w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer"
               />
+ 
+ 
             </div>
-
+ 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
               {navLinks.map((link, index) => (
@@ -85,7 +128,7 @@ const NewNavigation = () => {
                 Book Now
               </Button>
             </div>
-
+ 
             {/* Mobile Menu Button */}
             <button
               className="lg:hidden transition-colors text-black/80 hover:text-secondary"
@@ -96,7 +139,7 @@ const NewNavigation = () => {
           </div>
         </div>
       </nav>
-
+ 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-white lg:hidden animate-fade-in">
@@ -127,5 +170,7 @@ const NewNavigation = () => {
     </>
   );
 };
-
+ 
 export default NewNavigation;
+ 
+ 
