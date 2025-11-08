@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
 import { processLogoRemoveBg } from "@/utils/removeLogoBg";
  
+
 const NewNavigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,30 +25,29 @@ const NewNavigation = () => {
   //     .catch(err => console.error('Failed to process logo:', err));
   // }, []);
  
-  // useEffect(() => {
-  //   processLogoRemoveBg(logo)
-  //     .then(url => {
-  //       if (url) setProcessedLogo(url);
-  //       else setProcessedLogo(logo);
-  //     })
-  //     .catch(() => setProcessedLogo(logo));
-  // }, []);
- 
+  
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
- 
-    if (isMobile) {
-      // Mobile में original logo ही use करो
-      setProcessedLogo(logo);
-    } else {
-      // Desktop में background removal process चलाओ
-      processLogoRemoveBg(logo)
-        .then(url => {
-          if (url) setProcessedLogo(url);
-          else setProcessedLogo(logo);
-        })
-        .catch(() => setProcessedLogo(logo));
-    }
+    // choose logo variant based on viewport and keep it updated on resize
+    const checkAndProcess = () => {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        // for mobile use the original (avoid background-removed variants that may cause layout issues)
+        setProcessedLogo(logo);
+      } else {
+        // for desktop try to use the background-removed variant (if available)
+        processLogoRemoveBg(logo)
+          .then((url) => {
+            if (url) setProcessedLogo(url);
+            else setProcessedLogo(logo);
+          })
+          .catch(() => setProcessedLogo(logo));
+      }
+    };
+
+    checkAndProcess();
+    // keep it responsive when user resizes the window
+    window.addEventListener("resize", checkAndProcess);
+    return () => window.removeEventListener("resize", checkAndProcess);
   }, []);
  
  
@@ -77,9 +77,11 @@ const NewNavigation = () => {
           }`}
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-24">
+          {/* smaller header on mobile (h-20), larger on desktop (h-24) */}
+          <div className="flex items-center justify-between h-20 lg:h-24">
             {/* Logo - Much Bigger */}
-            <div className="flex items-center space-x-3 animate-fade-in">
+            {/* keep logo from stretching and make it responsive */}
+            <div className="flex items-center space-x-3 animate-fade-in flex-0">
               {/* <img
                 src={processedLogo}
                 alt="Somnath Auto Service Station"
@@ -99,7 +101,8 @@ const NewNavigation = () => {
               <img
                 src={processedLogo}
                 alt="Somnath Auto Service Station"
-                className="max-h-20 w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer"
+                onClick={() => scrollToSection("#home")}
+                className="h-12 lg:h-20 w-auto max-w-[160px] object-contain drop-shadow-2xl hover:scale-105 transition-transform cursor-pointer"
               />
  
  
@@ -142,9 +145,15 @@ const NewNavigation = () => {
  
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white lg:hidden animate-fade-in">
+          <div className="fixed inset-0 z-40 bg-white lg:hidden animate-fade-in">
           <div className="flex flex-col items-center justify-center h-full space-y-8 p-8">
-            <img src={processedLogo} alt="Logo" className="h-28 w-auto mb-8" />
+            {/* smaller logo in mobile menu to avoid overflow */}
+            <img
+              src={processedLogo}
+              alt="Logo"
+              onClick={() => scrollToSection("#home")}
+              className="h-16 md:h-20 w-auto mb-8 max-w-[180px] object-contain"
+            />
             {navLinks.map((link, index) => (
               <button
                 key={link.name}
